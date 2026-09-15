@@ -191,7 +191,7 @@ jobs:
           PIN_NOMOUNT="7919faf2ab574110e388a4f444e5fef909c24e16"
           PIN_KERNELSU="e23e035ad168ef13da86970f689dcab062e520de"
           PIN_RESUKISU="833edb0e8e4bc11ac8e976edd7de42da6bdc5bd2"
-          PIN_SUKISU_ULTRA="b20dee702035af09cb2ecb5f35443bbc1747f3e6"
+          PIN_SUKISU_ULTRA="7755cdb36f63945f286d7b1cab662b42b18f2789"
           declare -A PIN_SUSFS=(
             [susfs_commit_android12_5_10]="85a60092ea3a0768079e2a23672c993995b642fd"
             [susfs_commit_android13_5_10]="dd94c3a166179fed554b53665d37a41bfec3d00e"
@@ -255,7 +255,7 @@ jobs:
           if [ "${{ inputs.use_susfs }}" = "true" ]; then
             KERNELSU_COMMIT="$(pick "$PIN_KERNELSU" https://github.com/tiann/KernelSU.git refs/heads/main)"
             RESUKISU_COMMIT="$(pick "$PIN_RESUKISU" https://github.com/ReSukiSU/ReSukiSU.git refs/heads/main)"
-            SUKISU_ULTRA_COMMIT="$(pick "$PIN_SUKISU_ULTRA" https://github.com/SukiSU-Ultra/SukiSU-Ultra.git refs/heads/builtin)"
+            SUKISU_ULTRA_COMMIT="$(pick "$PIN_SUKISU_ULTRA" https://github.com/SukiSU-Ultra/SukiSU-Ultra.git refs/heads/main)"
           else
             KERNELSU_COMMIT="$(resolve_sha https://github.com/tiann/KernelSU.git refs/heads/main)"
             RESUKISU_COMMIT="$(resolve_sha https://github.com/ReSukiSU/ReSukiSU.git refs/heads/main)"
@@ -434,7 +434,7 @@ jobs:
                 ;;
               sukisu-ultra)
                 owner="SukiSU-Ultra"; repo="SukiSU-Ultra"; wf="build-manager.yml"
-                stock=$(git ls-remote https://github.com/SukiSU-Ultra/SukiSU-Ultra.git refs/heads/main | awk '{print $1; exit}')
+                stock="${{ steps.resolve.outputs.sukisu_ultra_commit }}"
                 run_id=$(gh api "repos/${owner}/${repo}/actions/workflows/${wf}/runs?head_sha=${stock}" \
                   --jq '.workflow_runs[0].id // empty')
                 if [[ -z "${run_id}" ]]; then
